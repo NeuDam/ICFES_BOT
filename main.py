@@ -10,6 +10,8 @@ TOKEN = os.getenv('TOKEN')
 #INICIAR CONEXIÓN
 bot = telebot.TeleBot(token=TOKEN)
 
+print('CONEXIÓN ESTABLECIDA')
+
 user_data = {}
 
 #COMANDOS
@@ -55,22 +57,25 @@ def manejar_td(message):
   documento = user_data[message.chat.id]['documento']
   td = user_data[message.chat.id]['td']
 
-  response = main(registro,documento,td)
+  response,pdf = main(registro,documento,td)
 
-  if 'NO SE ENCONTRÓ' in response:
+  if 'bad' in response:
     bot.send_message(message.chat.id, 'NO SE ENCONTRÓ EL RESULTADO :(')
   else:
-    bot.send_message(message.chat.id, f'HOLA, {response}')
-    time.sleep(0.5)
-    bot.send_message(message.chat.id, '¿Crees que lo ganaste o lo perdiste?...')
-    time.sleep(1.5)
+    if pdf == True:
+      bot.send_message(message.chat.id, f'HOLA, {response}')
+      time.sleep(0.5)
+      bot.send_message(message.chat.id, '¿Crees que lo ganaste o lo perdiste?...')
+      time.sleep(1.5)
 
-    with open(f'{response}.pdf', 'rb') as f:
-      bot.send_document(message.chat.id, f)
+      with open(f'{response}.pdf', 'rb') as f:
+        bot.send_document(message.chat.id, f)
 
-    time.sleep(3)
+      time.sleep(3)
 
-    bot.send_message(message.chat.id, 'Oye... ¿cuánto sacaste? :3')
+      bot.send_message(message.chat.id, 'Oye... ¿cuánto sacaste? :3')
+    else:
+      bot.send_message(message.chat.id, response)
 
 
   del user_data[message.chat.id]
