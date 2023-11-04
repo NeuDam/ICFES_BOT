@@ -60,7 +60,7 @@ def manejar_td(message):
   response,pdf = main(registro,documento,td)
 
   if 'bad' in response:
-    bot.send_message(message.chat.id, 'NO SE ENCONTRÓ EL RESULTADO :(')
+    bot.send_message(message.chat.id, 'HUBO UN ERROR :(')
   else:
     if pdf == True:
       bot.send_message(message.chat.id, f'HOLA, {response}')
